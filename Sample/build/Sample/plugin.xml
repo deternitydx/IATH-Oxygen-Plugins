@@ -1,0 +1,14 @@
+<!DOCTYPE plugin SYSTEM "../plugin.dtd">
+<plugin
+    name="Sample"
+    description="sample plugin that does nothing"
+    version="0.0.1"
+    vendor="Institute for Advanced Technology in the Humanities"
+    class="edu.virginia.iath.snac.oxygenplugins.sample.SamplePlugin">
+    <runtime>
+        <library name="Sample.jar"/>
+    </runtime>
+    <extension type="WorkspaceAccess"
+        class="edu.virginia.iath.snac.oxygenplugins.sample.SamplePluginExtension"/>
+    <view id="AnnotationViewID" initialSide="WEST" initialRow="1" />
+</plugin>
