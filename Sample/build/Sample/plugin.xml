@@ -2,7 +2,7 @@
 <plugin
     name="Sample"
     description="sample plugin that does nothing"
-    version="0.0.1"
+    version="0.0.2"
     vendor="Institute for Advanced Technology in the Humanities"
     class="edu.virginia.iath.snac.oxygenplugins.sample.SamplePlugin">
     <runtime>
@@ -10,5 +10,4 @@
     </runtime>
     <extension type="WorkspaceAccess"
         class="edu.virginia.iath.snac.oxygenplugins.sample.SamplePluginExtension"/>
-    <view id="AnnotationViewID" initialSide="WEST" initialRow="1" />
 </plugin>

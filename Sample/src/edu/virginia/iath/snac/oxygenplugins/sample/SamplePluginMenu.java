@@ -46,7 +46,7 @@ public class SamplePluginMenu extends Menu {
 	      }
 	    };
 	    menuItem2.addActionListener(action2);
-	    this.add(menuItem1);
+	    this.add(menuItem2);
 	}
 
 
