@@ -5,8 +5,6 @@ import javax.swing.JMenuBar;
 import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.MenuBarCustomizer;
-import ro.sync.exml.workspace.api.standalone.ViewComponentCustomizer;
-import ro.sync.exml.workspace.api.standalone.ViewInfo;
 
 
 public class SamplePluginExtension implements WorkspaceAccessPluginExtension {
@@ -35,10 +33,8 @@ public class SamplePluginExtension implements WorkspaceAccessPluginExtension {
 
 	}
 
-	// required because we are implementing Interface
-	// WorkspaceAccessPluginExtension
 	public boolean applicationClosing() {
-		return true; // it's ok with this plugin for the application to close
+		return true;
 	}
 
 }

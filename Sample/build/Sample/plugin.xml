@@ -2,7 +2,7 @@
 <plugin
     name="Sample"
     description="sample plugin that does nothing"
-    version="0.0.2"
+    version="0.0.3"
     vendor="Institute for Advanced Technology in the Humanities"
     class="edu.virginia.iath.snac.oxygenplugins.sample.SamplePlugin">
     <runtime>
