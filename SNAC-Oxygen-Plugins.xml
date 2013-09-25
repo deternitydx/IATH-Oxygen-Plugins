@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xt:extensions
+    xmlns:xt="http://www.oxygenxml.com/ns/extension"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xsi:schemaLocation="http://www.oxygenxml.com/ns/extension http://www.oxygenxml.com/ns/extension/extensions.xsd">
+
+    <xt:extension id="edu.virginia.iath.snac.oxygenplugins.sample.Sample">
+        <xt:location href="https://github.com/deternitydx/SNAC-Oxygen-Plugins/blob/master/Sample/build/sample.jar?raw=true"/>
+        <xt:version>0.0.1</xt:version>
+        <xt:oxy_version>14.2+</xt:oxy_version>
+        <xt:type>plugin</xt:type>
+        <xt:author>Institute for Advanced Technology in the Humanities</xt:author>
+        <xt:name>SamplePlugin</xt:name>
+        <xt:description><html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+                <title>SNAC Sample plugin</title>
+            </head>
+            <body>
+                <div>
+                <p>Simple sample plugin that gives a menu that does not do anything.</p>
+		</div>
+            </body>
+        </html>
+        </xt:description>
+        <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
+    </xt:extension>
+</xt:extensions>
