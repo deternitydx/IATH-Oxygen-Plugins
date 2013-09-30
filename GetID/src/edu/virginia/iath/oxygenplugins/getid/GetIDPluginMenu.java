@@ -52,6 +52,7 @@ public class GetIDPluginMenu extends Menu {
 				currentDBItem.setSelected(true);
 			}
 			currentDatabases.add(currentDBItem);
+			setupMenu.add(currentDBItem);
 		}
 
 		setupMenu.addSeparator();
