@@ -59,8 +59,8 @@ public class GetIDPluginMenu extends Menu {
 			public void actionPerformed(ActionEvent selection) {
 				String label = "Add New Project";
 
-				JTextField projectURL = new JTextField("http://", 80);
-				JTextField projectName = new JTextField("", 40);
+				JTextField projectURL = new JTextField("http://", 30);
+				JTextField projectName = new JTextField("", 30);
 
 				JPanel addPanel = new JPanel();
 				java.awt.GridLayout layout = new java.awt.GridLayout(2,2); // rows, columns

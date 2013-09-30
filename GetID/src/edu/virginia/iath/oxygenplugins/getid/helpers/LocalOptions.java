@@ -46,8 +46,10 @@ public class LocalOptions {
 		// Add the connect string to the database
 		LocalOptions.getWorkspace().getOptionsStorage().setOption(PREFIX + name, connect);
 		
-		if (LocalOptions.getDatabaseString(name).equals(connect))
+		if (LocalOptions.getDatabaseString(name).equals(connect)) {
+			LocalOptions.setCurrentDB(name);
 			return true;
+		}
 		return false;
 		
 	}
