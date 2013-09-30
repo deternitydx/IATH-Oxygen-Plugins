@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 
 import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
@@ -36,7 +35,14 @@ public class LocalOptions {
 		currentDBs.add(name);
 
 		// Update the current list of databases to include the new database
-		LocalOptions.getWorkspace().getOptionsStorage().setOption(DBLIST, StringUtils.join(currentDBs, DELIMITER));
+		String curStr = "";
+		for (String cdb : currentDBs) {
+			curStr += DELIMITER + cdb;
+		}
+		if (curStr.length() > 0)
+			curStr = curStr.substring(1);
+		
+		LocalOptions.getWorkspace().getOptionsStorage().setOption(DBLIST, curStr);
 		// Add the connect string to the database
 		LocalOptions.getWorkspace().getOptionsStorage().setOption(PREFIX + name, connect);
 		
