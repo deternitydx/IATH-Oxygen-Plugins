@@ -13,20 +13,24 @@ public class LocalOptions {
 	public static String CURRENTDB = "IATH::GetID::CurrentDatabase";
 	public static String DBLIST = "IATH::GetID::StoredDatabase";
 	public static String PREFIX = "IATH::GetID::DBConnect::";
-	public static String DELIMITER = ":::::";
+	public static String DELIMITER = "|";
+	public static String SPLITDELIMITER = "\\|";
 	
 	public static PluginWorkspace getWorkspace() {
         return PluginWorkspaceProvider.getPluginWorkspace();
     }
 	
 	public static List<String> getDatabases() {
+		System.err.println("Getting databases");
 		String dbs = LocalOptions.getWorkspace().getOptionsStorage().getOption(DBLIST, "");
-		List<String> ret = new ArrayList<String>(Arrays.asList(dbs.split(DELIMITER)));
+		List<String> ret = new ArrayList<String>(Arrays.asList(dbs.split(SPLITDELIMITER)));
+		System.err.println(ret.toString());
 		return ret;
 	}
 	
 	public static String getDatabaseString(String dbname) {
 		String dbstring = LocalOptions.getWorkspace().getOptionsStorage().getOption(PREFIX + dbname, "");
+		System.err.println("Getting database string: " + dbstring);
 		return dbstring;
 	}
 	
@@ -37,7 +41,8 @@ public class LocalOptions {
 		// Update the current list of databases to include the new database
 		String curStr = "";
 		for (String cdb : currentDBs) {
-			curStr += DELIMITER + cdb;
+			if (cdb != null && !cdb.equals(""))
+				curStr += DELIMITER + cdb;
 		}
 		if (curStr.length() > 0)
 			curStr = curStr.substring(1);
