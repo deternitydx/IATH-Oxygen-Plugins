@@ -26,7 +26,7 @@
         <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
     </xt:extension>
     <xt:extension id="edu.virginia.iath.oxygenplugins.getid.GetID">
-        <xt:location href="https://github.com/deternitydx/IATH-Oxygen-Plugins/blob/master/GetID/build/getid.jar?raw=true"/>
+        <xt:location href="http://www.cs.virginia.edu/~jh2jf/iath/getid.jar"/>
         <xt:version>0.0.1</xt:version>
         <xt:oxy_version>14.2+</xt:oxy_version>
         <xt:type>plugin</xt:type>
