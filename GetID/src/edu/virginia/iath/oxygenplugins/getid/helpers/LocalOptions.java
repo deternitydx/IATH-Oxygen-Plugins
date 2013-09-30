@@ -13,7 +13,7 @@ public class LocalOptions {
 	public static String CURRENTDB = "IATH::GetID::CurrentDatabase";
 	public static String DBLIST = "IATH::GetID::StoredDatabase";
 	public static String PREFIX = "IATH::GetID::DBConnect::";
-	public static String DELIMITER = "|";
+	public static String DELIMITER = ":::::";
 	
 	public static PluginWorkspace getWorkspace() {
         return PluginWorkspaceProvider.getPluginWorkspace();
