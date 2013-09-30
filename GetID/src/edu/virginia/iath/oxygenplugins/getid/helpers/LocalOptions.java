@@ -1,5 +1,6 @@
 package edu.virginia.iath.oxygenplugins.getid.helpers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class LocalOptions {
 	
 	public static List<String> getDatabases() {
 		String dbs = LocalOptions.getWorkspace().getOptionsStorage().getOption(DBLIST, "");
-		List<String> ret = Arrays.asList(dbs.split(DELIMITER));
+		List<String> ret = new ArrayList<String>(Arrays.asList(dbs.split(DELIMITER)));
 		return ret;
 	}
 	
