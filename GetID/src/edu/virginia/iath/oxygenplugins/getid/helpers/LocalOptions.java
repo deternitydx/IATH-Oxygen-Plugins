@@ -1,70 +1,94 @@
 package edu.virginia.iath.oxygenplugins.getid.helpers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Set;
 
 
 import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 
 public class LocalOptions {
-	
-	public static String CURRENTDB = "IATH::GetID::CurrentDatabase";
-	public static String DBLIST = "IATH::GetID::StoredDatabase";
-	public static String PREFIX = "IATH::GetID::DBConnect::";
-	public static String DELIMITER = "|";
-	public static String SPLITDELIMITER = "\\|";
-	
-	public static PluginWorkspace getWorkspace() {
-        return PluginWorkspaceProvider.getPluginWorkspace();
-    }
-	
-	public static List<String> getDatabases() {
-		System.err.println("Getting databases");
-		String dbs = LocalOptions.getWorkspace().getOptionsStorage().getOption(DBLIST, "");
-		List<String> ret = new ArrayList<String>(Arrays.asList(dbs.split(SPLITDELIMITER)));
-		System.err.println(ret.toString());
-		return ret;
-	}
-	
-	public static String getDatabaseString(String dbname) {
-		String dbstring = LocalOptions.getWorkspace().getOptionsStorage().getOption(PREFIX + dbname, "");
-		System.err.println("Getting database string: " + dbstring);
-		return dbstring;
-	}
-	
-	public static boolean addDatabase(String name, String connect) {
-		List<String> currentDBs = LocalOptions.getDatabases();
-		currentDBs.add(name);
 
-		// Update the current list of databases to include the new database
-		String curStr = "";
-		for (String cdb : currentDBs) {
-			if (cdb != null && !cdb.equals(""))
-				curStr += DELIMITER + cdb;
+	private class LocalStorage implements Serializable {
+		private static final long serialVersionUID = 1L;
+		public HashMap<String,String> databases;
+		public String currentDB;
+		
+		public LocalStorage() {
+			databases = new HashMap<String,String>();
+			currentDB = null;
 		}
-		if (curStr.length() > 0)
-			curStr = curStr.substring(1);
-		
-		LocalOptions.getWorkspace().getOptionsStorage().setOption(DBLIST, curStr);
-		// Add the connect string to the database
-		LocalOptions.getWorkspace().getOptionsStorage().setOption(PREFIX + name, connect);
-		
-		if (LocalOptions.getDatabaseString(name).equals(connect)) {
-			LocalOptions.setCurrentDB(name);
-			return true;
+	}
+
+	private LocalStorage data = null;
+
+	public PluginWorkspace getWorkspace() {
+		return PluginWorkspaceProvider.getPluginWorkspace();
+	}
+
+	public Set<String> getDatabases() {
+		System.err.println("Getting databases");
+		return data.databases.keySet();
+	}
+
+	public String getDatabaseString(String dbname) {
+		return data.databases.get(dbname);
+	}
+
+	public boolean addDatabase(String name, String connect) {
+		boolean success =  data.databases.put(name, connect) != null;
+		writeStorage();
+		return success;
+	}
+
+	public String getCurrentDB() {
+		return data.currentDB;
+	}
+
+	public void setCurrentDB(String name) {
+		data.currentDB = name;
+		writeStorage();
+	}
+
+	public void readStorage() {
+		try {
+			// Read object using ObjectInputStream
+			ObjectInputStream reader = 
+					new ObjectInputStream (new 
+							FileInputStream(getWorkspace().getPreferencesDirectory() + "GetIDPlugin.data"));
+
+			// Read the object
+			Object obj = reader.readObject();
+			if (obj instanceof LocalStorage)
+			{
+				data = (LocalStorage) obj;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			data = new LocalStorage();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			data = new LocalStorage();
 		}
-		return false;
-		
 	}
-	
-	public static String getCurrentDB() {
-		return LocalOptions.getWorkspace().getOptionsStorage().getOption(CURRENTDB, "");
-	}
-	
-	public static void setCurrentDB(String name) {
-		LocalOptions.getWorkspace().getOptionsStorage().setOption(CURRENTDB, name);
+
+	public void writeStorage() {
+		try {
+
+			// Grab an output stream to write the data object to disk
+			ObjectOutputStream writer = new ObjectOutputStream (new 
+					FileOutputStream(getWorkspace().getPreferencesDirectory() + "GetIDPlugin.data"));
+			// Write data to disk
+			writer.writeObject ( data );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

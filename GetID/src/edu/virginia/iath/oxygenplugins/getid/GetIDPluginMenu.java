@@ -31,12 +31,17 @@ public class GetIDPluginMenu extends Menu {
 	private ButtonGroup currentDatabases;
 
 	private StandalonePluginWorkspace ws = null;
+	private LocalOptions options = null;
 
 	private static String name = "GetID";
 
-	public GetIDPluginMenu(StandalonePluginWorkspace spw) {
+	public GetIDPluginMenu(StandalonePluginWorkspace spw, LocalOptions ops) {
 		super(name, true);
 		ws = spw;
+		options = ops;
+		
+		// setup the options
+		options.readStorage();
 
 		// Add the menu to select and/or add a new database
 		Menu setupMenu = new Menu("Select Project");
@@ -45,10 +50,10 @@ public class GetIDPluginMenu extends Menu {
 		currentDatabases = new ButtonGroup();
 		JRadioButtonMenuItem currentDBItem;
 
-		for (String project: LocalOptions.getDatabases()) {
+		for (String project: options.getDatabases()) {
 			currentDBItem = new JRadioButtonMenuItem(project);
 			currentDBItem.setText(project);
-			if (project.equals(LocalOptions.getCurrentDB())) {
+			if (project.equals(options.getCurrentDB())) {
 				currentDBItem.setSelected(true);
 			}
 			currentDatabases.add(currentDBItem);
@@ -79,12 +84,12 @@ public class GetIDPluginMenu extends Menu {
 				// On OK, store the new database
 				if (result == JOptionPane.OK_OPTION) {
 					// Add the database
-					LocalOptions.addDatabase(projectName.getText(), projectURL.getText());
+					options.addDatabase(projectName.getText(), projectURL.getText());
 					
 					// Add to the menu
 					JRadioButtonMenuItem currentDBItem = new JRadioButtonMenuItem(projectName.getText());
 					currentDBItem.setText(projectName.getText());
-					if (projectName.getText().equals(LocalOptions.getCurrentDB())) {
+					if (projectName.getText().equals(options.getCurrentDB())) {
 						currentDBItem.setSelected(true);
 					}
 					currentDatabases.add(currentDBItem);
@@ -102,8 +107,8 @@ public class GetIDPluginMenu extends Menu {
 
 		// Add the insert ID menu item
 		JMenuItem menuItem = new JMenuItem("Insert Unique ID");
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
-				InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G,
+				InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				// call something on the action
