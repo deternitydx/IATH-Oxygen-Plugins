@@ -29,6 +29,7 @@ public class GetIDPluginMenu extends Menu {
 	private static final long serialVersionUID = 1L;
 	
 	private ButtonGroup currentDatabases;
+	private Menu setupMenu;
 
 	private StandalonePluginWorkspace ws = null;
 	private LocalOptions options = null;
@@ -44,7 +45,7 @@ public class GetIDPluginMenu extends Menu {
 		options.readStorage();
 
 		// Add the menu to select and/or add a new database
-		Menu setupMenu = new Menu("Select Project");
+		setupMenu = new Menu("Select Project");
 
 		// create radio-button style menu for defined document types
 		currentDatabases = new ButtonGroup();
@@ -60,7 +61,7 @@ public class GetIDPluginMenu extends Menu {
 			setupMenu.add(currentDBItem);
 		}
 
-		setupMenu.addSeparator();
+		this.add(setupMenu);
 
 		JMenuItem addNew = new JMenuItem("Add New Project");
 		addNew.addActionListener(new ActionListener() {
@@ -85,20 +86,19 @@ public class GetIDPluginMenu extends Menu {
 				if (result == JOptionPane.OK_OPTION) {
 					// Add the database
 					options.addDatabase(projectName.getText(), projectURL.getText());
+					options.setCurrentDB(projectName.getText());
 					
 					// Add to the menu
 					JRadioButtonMenuItem currentDBItem = new JRadioButtonMenuItem(projectName.getText());
 					currentDBItem.setText(projectName.getText());
-					if (projectName.getText().equals(options.getCurrentDB())) {
-						currentDBItem.setSelected(true);
-					}
+					currentDBItem.setSelected(true);
 					currentDatabases.add(currentDBItem);
+					setupMenu.add(currentDBItem);
 				}
 			}
 		});
-		setupMenu.add(addNew);
+		this.add(addNew);
 
-		this.add(setupMenu);
 
 
 
