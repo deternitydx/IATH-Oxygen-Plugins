@@ -25,4 +25,24 @@
         </xt:description>
         <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
     </xt:extension>
+    <xt:extension id="edu.virginia.iath.oxygenplugins.getid.GetID">
+        <xt:location href="https://github.com/deternitydx/IATH-Oxygen-Plugins/blob/master/GetID/build/getid.jar?raw=true"/>
+        <xt:version>0.0.1</xt:version>
+        <xt:oxy_version>14.2+</xt:oxy_version>
+        <xt:type>plugin</xt:type>
+        <xt:author>Institute for Advanced Technology in the Humanities</xt:author>
+        <xt:name>GetID</xt:name>
+        <xt:description><html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+                <title>Get ID</title>
+            </head>
+            <body>
+                <div>
+                <p>Inserts an unique identifier into an XML document.  Queries a project database for the next unique identifier and inserts that into the document only if valid based on the XML specification.</p>
+		</div>
+            </body>
+        </html>
+        </xt:description>
+        <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
+    </xt:extension>
 </xt:extensions>

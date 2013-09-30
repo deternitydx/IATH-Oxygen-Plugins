@@ -1,0 +1,13 @@
+<!DOCTYPE plugin SYSTEM "../plugin.dtd">
+<plugin
+    name="GetID"
+    description="Get Unique Identifier from a Project URL"
+    version="0.0.1"
+    vendor="Institute for Advanced Technology in the Humanities"
+    class="edu.virginia.iath.oxygenplugins.getid.GetID">
+    <runtime>
+        <library name="GetID.jar"/>
+    </runtime>
+    <extension type="WorkspaceAccess"
+        class="edu.virginia.iath.oxygenplugins.getid.GetIDPluginExtension"/>
+</plugin>
