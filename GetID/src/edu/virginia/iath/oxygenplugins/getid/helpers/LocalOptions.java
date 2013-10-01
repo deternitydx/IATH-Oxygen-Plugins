@@ -48,6 +48,8 @@ public class LocalOptions {
 	@SuppressWarnings("unchecked")
 	public void readStorage() {
 		try {
+			
+			System.err.println("Reading local information from: " + getWorkspace().getPreferencesDirectory());
 			// Read object using ObjectInputStream
 			ObjectInputStream reader = 
 					new ObjectInputStream (new 

@@ -56,6 +56,8 @@ public class GetIDPluginMenu extends Menu {
 			currentDBItem.setText(project);
 			if (project.equals(options.getCurrentDB())) {
 				currentDBItem.setSelected(true);
+			} else {
+				System.err.println("Database: " + project + ", does not match currentdb: " + options.getCurrentDB());
 			}
 			currentDatabases.add(currentDBItem);
 			setupMenu.add(currentDBItem);
