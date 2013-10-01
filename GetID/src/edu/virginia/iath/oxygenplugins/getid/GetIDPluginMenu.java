@@ -1,9 +1,26 @@
+/**
+* The Institute for Advanced Technology in the Humanities
+*
+* Copyright 2013 University of Virginia. Licensed under the Educational Community License, Version 2.0 (the
+* "License"); you may not use this file except in compliance with the License. You may obtain a copy of the
+* License at
+*
+* http://opensource.org/licenses/ECL-2.0
+* http://www.osedu.org/licenses/ECL-2.0
+*
+* Unless required by applicable law or agreed to in writing, software distributed under the License is
+* distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+* the License for the specific language governing permissions and limitations under the License.
+*
+*
+*/
 package edu.virginia.iath.oxygenplugins.getid;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
@@ -16,8 +33,12 @@ import javax.swing.KeyStroke;
 
 import edu.virginia.iath.oxygenplugins.getid.helpers.LocalOptions;
 
+import ro.sync.contentcompletion.xml.CIAttribute;
+import ro.sync.contentcompletion.xml.WhatAttributesCanGoHereContext;
 import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.editor.page.text.WSTextEditorPage;
+import ro.sync.exml.workspace.api.editor.page.text.WSTextXMLSchemaManager;
+import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ui.Menu;
 
@@ -54,6 +75,11 @@ public class GetIDPluginMenu extends Menu {
 		for (String project: options.getDatabases()) {
 			currentDBItem = new JRadioButtonMenuItem(project);
 			currentDBItem.setText(project);
+			currentDBItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent selection) {
+					options.setCurrentDB(((JRadioButtonMenuItem) selection.getSource()).getText());
+				}
+			});
 			if (project.equals(options.getCurrentDB())) {
 				currentDBItem.setSelected(true);
 			} else {
@@ -94,6 +120,7 @@ public class GetIDPluginMenu extends Menu {
 					JRadioButtonMenuItem currentDBItem = new JRadioButtonMenuItem(projectName.getText());
 					currentDBItem.setText(projectName.getText());
 					currentDBItem.setSelected(true);
+					currentDatabases.clearSelection();
 					currentDatabases.add(currentDBItem);
 					setupMenu.add(currentDBItem);
 				}
@@ -121,26 +148,54 @@ public class GetIDPluginMenu extends Menu {
 				if (editorAccess != null && editorAccess.getCurrentPage() instanceof WSTextEditorPage) {
 					ed = (WSTextEditorPage)editorAccess.getCurrentPage();
 				}
+				
+				// Check that the attribute can be put here:
+				boolean allowedHere = false;
+		        if (ed != null && ed instanceof WSXMLTextEditorPage) {
+		            WSTextEditorPage textpage = (WSXMLTextEditorPage) ed;
+		            WSTextXMLSchemaManager schema = textpage.getXMLSchemaManager();
+		            try {
+		                // use the schema to get a context-based list of allowable elements
+						int selectionOffset = ed.getSelectionStart();
+		                WhatAttributesCanGoHereContext elContext = schema.createWhatAttributesCanGoHereContext(selectionOffset);
+		                List<CIAttribute> attributes;
+		                attributes = schema.whatAttributesCanGoHere(elContext);
+		                
+		                // loop through the list to see if the tag we want to add
+		                // matches a name on any of the allowed elements
+		                for (int i=0; attributes != null && i < attributes.size(); i++) {
+		                    ro.sync.contentcompletion.xml.CIAttribute at = attributes.get(i);
+		                    if (at.getName().equals("id")) {
+		                        allowedHere = true;
+		                        break;
+		                    }
+		                }
+		            } catch (Exception e) {
+		            	// If any exception occurs, then this is not allowed here, so we won't continue
+		                allowedHere = false;
+		            }
+		        }
 
-				// Get the selected string
-				String selection = null;
-				if (ed != null && ed.hasSelection()) {
-					selection = ed.getSelectedText();
-				}
 
-				// Grab the next ID
-				String nextID = "E0001";
+				
 
-				// Plug the ID into the result
-				String result = " id=\"" + nextID + "\"";
+				// Insert the ID attribute into the document
+				if (allowedHere) {
+					// Grab the next ID
+					String nextID = options.getNextID();
 
-				// Update the text in the document
-				if (!result.equals(selection)) {
+					// Plug the ID into the result
+					String result = "id=\"" + nextID + "\"";
+					
 					ed.beginCompoundUndoableEdit();
 					int selectionOffset = ed.getSelectionStart();
 					ed.deleteSelection();
 					javax.swing.text.Document doc = ed.getDocument();
 					try {
+						if (selectionOffset > 0 && !doc.getText(selectionOffset - 1, 1).equals(" "))
+							result = " " + result;
+						if (selectionOffset > 0 && !doc.getText(selectionOffset,1).equals(" ") && !doc.getText(selectionOffset,1).equals(">"))
+							result = result + " ";
 						doc.insertString(selectionOffset, result,
 								javax.swing.text.SimpleAttributeSet.EMPTY);
 					} catch (javax.swing.text.BadLocationException b) {

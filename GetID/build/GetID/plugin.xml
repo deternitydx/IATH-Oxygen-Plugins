@@ -2,7 +2,7 @@
 <plugin
     name="GetID"
     description="Get Unique Identifier from a Project URL"
-    version="0.1.3"
+    version="0.2.0"
     vendor="Institute for Advanced Technology in the Humanities"
     class="edu.virginia.iath.oxygenplugins.getid.GetIDPlugin">
     <runtime>
