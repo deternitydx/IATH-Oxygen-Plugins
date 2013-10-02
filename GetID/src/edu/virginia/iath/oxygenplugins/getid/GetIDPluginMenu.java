@@ -82,9 +82,7 @@ public class GetIDPluginMenu extends Menu {
 			});
 			if (project.equals(options.getCurrentDB())) {
 				currentDBItem.setSelected(true);
-			} else {
-				System.err.println("Database: " + project + ", does not match currentdb: " + options.getCurrentDB());
-			}
+			} 
 			currentDatabases.add(currentDBItem);
 			setupMenu.add(currentDBItem);
 		}
@@ -202,6 +200,10 @@ public class GetIDPluginMenu extends Menu {
 						// Okay if it doesn't work
 					}
 					ed.endCompoundUndoableEdit();
+				} else {
+					// The ID attribute is not allowed here in the document, so give an error message
+					JOptionPane.showMessageDialog((java.awt.Frame) ws.getParentFrame(),
+			                "The 'id' attribute is not allowed in the current context.", "Warning", JOptionPane.ERROR_MESSAGE);
 				}
 
 
