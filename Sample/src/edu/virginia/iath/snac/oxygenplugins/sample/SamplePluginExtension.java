@@ -22,7 +22,7 @@ public class SamplePluginExtension implements WorkspaceAccessPluginExtension {
 			final StandalonePluginWorkspace pluginWorkspaceAccess) {
 		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 
-		pluginWorkspaceAccess.addMenuBarCustomizer(new MenuBarCustomizer() {
+		this.pluginWorkspaceAccess.addMenuBarCustomizer(new MenuBarCustomizer() {
 
 			public void customizeMainMenu(JMenuBar mainMenuBar) {
 				// Add the SamplePlugin to the next-to-last spot in the menu
