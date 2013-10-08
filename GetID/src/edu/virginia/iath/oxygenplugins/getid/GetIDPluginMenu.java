@@ -16,6 +16,7 @@
 */
 package edu.virginia.iath.oxygenplugins.getid;
 
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -96,14 +97,23 @@ public class GetIDPluginMenu extends Menu {
 
 				JTextField projectURL = new JTextField("http://", 30);
 				JTextField projectName = new JTextField("", 30);
+				
 
+				java.awt.GridLayout layoutOuter = new java.awt.GridLayout(2,1);
+				java.awt.FlowLayout layout = new java.awt.FlowLayout(FlowLayout.RIGHT); // rows, columns
+				
 				JPanel addPanel = new JPanel();
-				java.awt.GridLayout layout = new java.awt.GridLayout(2,2); // rows, columns
-				addPanel.setLayout(layout);
-				addPanel.add(new JLabel("Project Name: "));
-				addPanel.add(projectName);
-				addPanel.add(new JLabel("Project ID URL: "));
-				addPanel.add(projectURL);
+				JPanel addPanelInner = new JPanel();
+				addPanel.setLayout(layoutOuter);
+				addPanelInner.setLayout(layout);
+				addPanelInner.add(new JLabel("Project Name: "));
+				addPanelInner.add(projectName);
+				addPanel.add(addPanelInner);
+				addPanelInner = new JPanel();
+				addPanelInner.setLayout(layout);
+				addPanelInner.add(new JLabel("Project ID URL: "));
+				addPanelInner.add(projectURL);
+				addPanel.add(addPanelInner);
 
 				int result = JOptionPane.showConfirmDialog((java.awt.Frame)ws.getParentFrame(),
 						addPanel, label, JOptionPane.OK_CANCEL_OPTION);
