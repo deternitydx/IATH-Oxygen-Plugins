@@ -2,12 +2,12 @@
 <plugin
     name="DateParser"
     description="Parse date into an EAC standard date"
-    version="0.0.1"
+    version="0.0.2"
     vendor="Institute for Advanced Technology in the Humanities"
-    class="edu.virginia.iath.oxygenplugins.getid.GetIDPlugin">
+    class="edu.virginia.iath.oxygenplugins.dateparser.DateParserPlugin">
     <runtime>
         <library name="DateParser.jar"/>
     </runtime>
     <extension type="WorkspaceAccess"
-        class="edu.virginia.iath.oxygenplugins.getid.DateParserPluginExtension"/>
+        class="edu.virginia.iath.oxygenplugins.dateparser.DateParserPluginExtension"/>
 </plugin>

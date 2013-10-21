@@ -62,7 +62,7 @@ public class DateParserPluginMenu extends Menu {
 		// Add the insert ID menu item
 		JMenuItem menuItem = new JMenuItem("Parse Selected Date");
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D,
-				InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
+				InputEvent.CTRL_MASK | InputEvent.ALT_MASK | InputEvent.SHIFT_MASK));
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				// call something on the action
@@ -124,7 +124,7 @@ public class DateParserPluginMenu extends Menu {
 						for (SNACDate d : dates) {
 							// Open the tags
 							if (d.getType() == SNACDate.FROM_DATE)
-								xml += "<dateRange>\n<fromDate";
+								xml += "<dateRange><fromDate";
 							else if (d.getType() == SNACDate.TO_DATE)
 								xml += "<toDate";
 							else
@@ -146,20 +146,18 @@ public class DateParserPluginMenu extends Menu {
 							
 							// Close the tags
 							if (d.getType() == SNACDate.FROM_DATE)
-								xml += "</fromDate>\n";
+								xml += "</fromDate>";
 							else if (d.getType() == SNACDate.TO_DATE)
-								xml += "</toDate></dateRange>\n";
+								xml += "</toDate></dateRange>";
 							else
-								xml += "</date>\n";
+								xml += "</date>";
 						}
 						
 						
 						
 					} else {
 						// nothing was parsed
-						xml = "<return>\n";
-						xml += "<date localType=\"" + suspiciousDate + "\">" + parser.getOriginalDate() +"</date>\n";
-						xml += "</return>";
+						xml += "<date localType=\"" + suspiciousDate + "\">" + parser.getOriginalDate() +"</date>";
 					}
 
 					// Update the text in the document

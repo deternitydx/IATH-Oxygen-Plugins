@@ -54,5 +54,9 @@ public class DateParserPlugin extends Plugin {
 	public DateParserPluginExtension getExtension() {
 		return (DateParserPluginExtension)instance.getDescriptor().getExtension("WorkspaceAccess");
 	}
+	
+	public static void main (String args[]) {
+		return;
+	}
 
 }
