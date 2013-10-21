@@ -18,8 +18,6 @@ package edu.virginia.iath.oxygenplugins.dateparser;
 
 import javax.swing.JMenuBar;
 
-import edu.virginia.iath.oxygenplugins.dateparser.helpers.LocalOptions;
-
 import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.MenuBarCustomizer;
@@ -32,7 +30,6 @@ public class DateParserPluginExtension implements WorkspaceAccessPluginExtension
 	 * Plugin workspace access.
 	 */
 	private StandalonePluginWorkspace pluginWorkspaceAccess;
-	private LocalOptions options;
 
 	/**
 	 * On application startup, add SamplePlugin menu to top-level menubar.
@@ -40,13 +37,12 @@ public class DateParserPluginExtension implements WorkspaceAccessPluginExtension
 	public void applicationStarted(
 			final StandalonePluginWorkspace pwa) {
 		this.pluginWorkspaceAccess = pwa;
-		options = new LocalOptions();
 
 		pluginWorkspaceAccess.addMenuBarCustomizer(new MenuBarCustomizer() {
 
 			public void customizeMainMenu(JMenuBar mainMenuBar) {
 				// Add the SamplePlugin to the next-to-last spot in the menu
-				mainMenuBar.add(new DateParserPluginMenu(pluginWorkspaceAccess, options),
+				mainMenuBar.add(new DateParserPluginMenu(pluginWorkspaceAccess),
 						mainMenuBar.getMenuCount() - 1);
 			}
 		});

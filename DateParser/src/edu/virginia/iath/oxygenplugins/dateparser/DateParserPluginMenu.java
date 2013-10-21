@@ -31,7 +31,8 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
-import edu.virginia.iath.oxygenplugins.dateparser.helpers.LocalOptions;
+import edu.virginia.iath.oxygenplugins.dateparser.helpers.DateParserHelper;
+import edu.virginia.iath.oxygenplugins.dateparser.helpers.SNACDate;
 
 import ro.sync.contentcompletion.xml.CIAttribute;
 import ro.sync.contentcompletion.xml.WhatAttributesCanGoHereContext;
@@ -48,93 +49,19 @@ public class DateParserPluginMenu extends Menu {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	private ButtonGroup currentDatabases;
-	private Menu setupMenu;
 
 	private StandalonePluginWorkspace ws = null;
-	private LocalOptions options = null;
 
 	private static String name = "DateParser";
 
-	public DateParserPluginMenu(StandalonePluginWorkspace spw, LocalOptions ops) {
+	public DateParserPluginMenu(StandalonePluginWorkspace spw) {
 		super(name, true);
 		ws = spw;
-		options = ops;
-		
-		// setup the options
-		options.readStorage();
 
-		// Add the menu to select and/or add a new database
-		setupMenu = new Menu("Select Project");
-
-		// create radio-button style menu for defined document types
-		currentDatabases = new ButtonGroup();
-		JRadioButtonMenuItem currentDBItem;
-
-		for (String project: options.getDatabases()) {
-			currentDBItem = new JRadioButtonMenuItem(project);
-			currentDBItem.setText(project);
-			currentDBItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent selection) {
-					options.setCurrentDB(((JRadioButtonMenuItem) selection.getSource()).getText());
-				}
-			});
-			if (project.equals(options.getCurrentDB())) {
-				currentDBItem.setSelected(true);
-			} 
-			currentDatabases.add(currentDBItem);
-			setupMenu.add(currentDBItem);
-		}
-
-		this.add(setupMenu);
-
-		JMenuItem addNew = new JMenuItem("Add New Project");
-		addNew.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent selection) {
-				String label = "Add New Project";
-
-				JTextField projectURL = new JTextField("http://", 30);
-				JTextField projectName = new JTextField("", 30);
-
-				JPanel addPanel = new JPanel();
-				java.awt.GridLayout layout = new java.awt.GridLayout(2,2); // rows, columns
-				addPanel.setLayout(layout);
-				addPanel.add(new JLabel("Project Name: "));
-				addPanel.add(projectName);
-				addPanel.add(new JLabel("Project ID URL: "));
-				addPanel.add(projectURL);
-
-				int result = JOptionPane.showConfirmDialog((java.awt.Frame)ws.getParentFrame(),
-						addPanel, label, JOptionPane.OK_CANCEL_OPTION);
-
-				// On OK, store the new database
-				if (result == JOptionPane.OK_OPTION) {
-					// Add the database
-					options.addDatabase(projectName.getText(), projectURL.getText());
-					options.setCurrentDB(projectName.getText());
-					
-					// Add to the menu
-					JRadioButtonMenuItem currentDBItem = new JRadioButtonMenuItem(projectName.getText());
-					currentDBItem.setText(projectName.getText());
-					currentDBItem.setSelected(true);
-					currentDatabases.clearSelection();
-					currentDatabases.add(currentDBItem);
-					setupMenu.add(currentDBItem);
-				}
-			}
-		});
-		this.add(addNew);
-
-
-
-
-		// Add a divider
-		this.addSeparator();
 
 		// Add the insert ID menu item
-		JMenuItem menuItem = new JMenuItem("Insert Unique ID");
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G,
+		JMenuItem menuItem = new JMenuItem("Parse Selected Date");
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D,
 				InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
@@ -146,7 +73,7 @@ public class DateParserPluginMenu extends Menu {
 				if (editorAccess != null && editorAccess.getCurrentPage() instanceof WSTextEditorPage) {
 					ed = (WSTextEditorPage)editorAccess.getCurrentPage();
 				}
-				
+				/**
 				// Check that the attribute can be put here:
 				boolean allowedHere = false;
 		        if (ed != null && ed instanceof WSXMLTextEditorPage) {
@@ -172,11 +99,87 @@ public class DateParserPluginMenu extends Menu {
 		            	// If any exception occurs, then this is not allowed here, so we won't continue
 		                allowedHere = false;
 		            }
-		        }
+		        }**/
 
+		        // Get the selected string
+				String selection = null;
+				if (ed != null && ed.hasSelection()) {
+					selection = ed.getSelectedText();
+				}
 
+				if (selection != null) {
+					// Try to parse and build the date object:
+					String dateStr = selection.replace("<date>", "").replace("</date>", "");
+					String suspiciousDate = "http://socialarchive.iath.virginia.edu/control/term#SuspiciousDate";
+					String xml = "";
+					
+					DateParserHelper parser = new DateParserHelper(dateStr);
+					
+					// Check to see if the values were parsed
+					if (parser.wasParsed()) {
+						
+						List<SNACDate> dates = parser.getDates();
+						
+						// Build an XML object out of the results
+						for (SNACDate d : dates) {
+							// Open the tags
+							if (d.getType() == SNACDate.FROM_DATE)
+								xml += "<dateRange>\n<fromDate";
+							else if (d.getType() == SNACDate.TO_DATE)
+								xml += "<toDate";
+							else
+								xml += "<date";
+							
+							// Add the dates to the XML
+							if (!d.getParsedDate().equals("null"))
+								xml += " standardDate=\"" + d.getParsedDate() + "\"";
+							if (!d.getNotBefore().equals("null"))
+								xml += " notBefore=\"" + d.getNotBefore() + "\"";
+							if (!d.getNotAfter().equals("null"))
+								xml += " notAfter=\"" + d.getNotAfter() + "\"";
+							
+							// Close the open tags
+							xml += ">";
+							
+							// Add the original date passed to Java
+							xml += d.getOriginalDate();
+							
+							// Close the tags
+							if (d.getType() == SNACDate.FROM_DATE)
+								xml += "</fromDate>\n";
+							else if (d.getType() == SNACDate.TO_DATE)
+								xml += "</toDate></dateRange>\n";
+							else
+								xml += "</date>\n";
+						}
+						
+						
+						
+					} else {
+						// nothing was parsed
+						xml = "<return>\n";
+						xml += "<date localType=\"" + suspiciousDate + "\">" + parser.getOriginalDate() +"</date>\n";
+						xml += "</return>";
+					}
+
+					// Update the text in the document
+					if (!xml.equals(selection)) {
+						ed.beginCompoundUndoableEdit();
+						int selectionOffset = ed.getSelectionStart();
+						ed.deleteSelection();
+						javax.swing.text.Document doc = ed.getDocument();
+						try {
+							doc.insertString(selectionOffset, xml,
+									javax.swing.text.SimpleAttributeSet.EMPTY);
+						} catch (javax.swing.text.BadLocationException b) {
+							// Okay if it doesn't work
+						}
+						ed.endCompoundUndoableEdit();
+					}
+
+				}
 				
-
+				/**
 				// Insert the ID attribute into the document
 				if (allowedHere) {
 					// Grab the next ID
@@ -205,7 +208,7 @@ public class DateParserPluginMenu extends Menu {
 					JOptionPane.showMessageDialog((java.awt.Frame) ws.getParentFrame(),
 			                "The 'id' attribute is not allowed in the current context.", "Warning", JOptionPane.ERROR_MESSAGE);
 				}
-
+				 **/
 
 
 

@@ -45,4 +45,24 @@
         </xt:description>
         <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
     </xt:extension>
+    <xt:extension id="edu.virginia.iath.snac.oxygenplugins.dateparser.DateParser">
+        <xt:location href="http://www.cs.virginia.edu/~jh2jf/iath/DateParser.jar"/>
+        <xt:version>0.0.1</xt:version>
+        <xt:oxy_version>14.2+</xt:oxy_version>
+        <xt:type>plugin</xt:type>
+        <xt:author>Institute for Advanced Technology in the Humanities</xt:author>
+        <xt:name>DateParser</xt:name>
+        <xt:description><html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+                <title>EAC Date Parser</title>
+            </head>
+            <body>
+                <div>
+                <p>Grabs the selected object (a date object), parses the date, and replaces it with a date or dateRange object in standard form.</p>
+		</div>
+            </body>
+        </html>
+        </xt:description>
+        <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
+    </xt:extension>
 </xt:extensions>
