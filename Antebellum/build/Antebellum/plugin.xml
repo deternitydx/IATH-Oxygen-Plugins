@@ -1,0 +1,13 @@
+<!DOCTYPE plugin SYSTEM "../plugin.dtd">
+<plugin
+    name="Antebellum Name Search"
+    description="Query and insert an ID from the Antebellum Database"
+    version="0.0.1"
+    vendor="Institute for Advanced Technology in the Humanities"
+    class="edu.virginia.iath.oxygenplugins.antebellum.AntebellumPlugin">
+    <runtime>
+        <library name="Antebellum.jar"/>
+    </runtime>
+    <extension type="WorkspaceAccess"
+        class="edu.virginia.iath.oxygenplugins.antebellum.AntebellumPluginExtension"/>
+</plugin>

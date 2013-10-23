@@ -65,4 +65,24 @@
         </xt:description>
         <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
     </xt:extension>
+    <xt:extension id="edu.virginia.iath.snac.oxygenplugins.antebellum.Antebellum">
+        <xt:location href="http://www.cs.virginia.edu/~jh2jf/iath/Antebellum.jar"/>
+        <xt:version>0.0.1</xt:version>
+        <xt:oxy_version>14.2+</xt:oxy_version>
+        <xt:type>plugin</xt:type>
+        <xt:author>Institute for Advanced Technology in the Humanities</xt:author>
+        <xt:name>Antebellum Name Search</xt:name>
+        <xt:description><html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+                <title>Antebellum Name Search</title>
+            </head>
+            <body>
+                <div>
+                <p>Provides a means of searching the Antebellum UVA database for a name, then inserting the correct ID.</p>
+		</div>
+            </body>
+        </html>
+        </xt:description>
+        <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
+    </xt:extension>
 </xt:extensions>
