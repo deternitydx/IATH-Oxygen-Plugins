@@ -67,7 +67,7 @@
     </xt:extension>
     <xt:extension id="edu.virginia.iath.snac.oxygenplugins.antebellum.Antebellum">
         <xt:location href="http://www.cs.virginia.edu/~jh2jf/iath/Antebellum.jar"/>
-        <xt:version>0.0.1</xt:version>
+        <xt:version>0.0.2</xt:version>
         <xt:oxy_version>14.2+</xt:oxy_version>
         <xt:type>plugin</xt:type>
         <xt:author>Institute for Advanced Technology in the Humanities</xt:author>

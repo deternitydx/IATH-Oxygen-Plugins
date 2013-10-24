@@ -16,6 +16,7 @@
 */
 package edu.virginia.iath.oxygenplugins.antebellum;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -76,10 +77,12 @@ public class AntebellumPluginMenu extends Menu {
 				String label = "Find Name";
 
 				JTextField lastName = new JTextField("", 30);
+				lastName.setPreferredSize(new Dimension(350,25));
 				//JTextField projectName = new JTextField("", 30);
 				
 				JComboBox possibleVals = new JComboBox();
 				possibleVals.setEnabled(false);
+				possibleVals.setPreferredSize(new Dimension(350,25));
 				
 				JButton search = new JButton("Search");
 				search.addActionListener(new ActionListener() {
@@ -88,19 +91,21 @@ public class AntebellumPluginMenu extends Menu {
 						return;
 					}
 				});
+				search.setPreferredSize(new Dimension(100,25));
 
 				JButton insert = new JButton("Insert");
-				search.addActionListener(new ActionListener() {
+				insert.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent selection) {
 						// Insert into the page
 						return;
 					}
 				});
+				insert.setPreferredSize(new Dimension(100,25));
 				
 				
 
-				java.awt.GridLayout layoutOuter = new java.awt.GridLayout(4,1);
-				java.awt.FlowLayout layout = new java.awt.FlowLayout(FlowLayout.LEFT); // rows, columns
+				java.awt.GridLayout layoutOuter = new java.awt.GridLayout(3,1);
+				java.awt.FlowLayout layout = new java.awt.FlowLayout(FlowLayout.RIGHT); // rows, columns
 				
 				JPanel addPanel = new JPanel();
 				JPanel addPanelInner = new JPanel();
@@ -111,7 +116,6 @@ public class AntebellumPluginMenu extends Menu {
 				addPanelInner.add(lastName);
 				addPanelInner.add(search);
 				addPanel.add(addPanelInner);
-				addPanel.add(new JSeparator(JSeparator.HORIZONTAL));
 				addPanelInner = new JPanel();
 				addPanelInner.setLayout(layout);
 				addPanelInner.add(new JLabel("Narrow Search: "));
@@ -119,8 +123,10 @@ public class AntebellumPluginMenu extends Menu {
 				addPanelInner.add(insert);
 				addPanel.add(addPanelInner);
 
-				int result = JOptionPane.showConfirmDialog((java.awt.Frame)ws.getParentFrame(),
-						addPanel, label, JOptionPane.CANCEL_OPTION);
+				JOptionPane.showMessageDialog((java.awt.Frame)ws.getParentFrame(), addPanel, label, JOptionPane.PLAIN_MESSAGE);
+				
+				//int result = JOptionPane.showConfirmDialog((java.awt.Frame)ws.getParentFrame(),
+				//		addPanel, label, JOptionPane.CANCEL_OPTION);
 
 				
 			}
