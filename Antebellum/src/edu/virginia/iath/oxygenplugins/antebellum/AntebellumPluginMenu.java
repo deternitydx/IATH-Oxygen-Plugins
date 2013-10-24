@@ -22,6 +22,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
@@ -35,6 +38,8 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+
+import org.json.JSONObject;
 
 import edu.virginia.iath.oxygenplugins.antebellum.helpers.LocalOptions;
 
@@ -76,11 +81,11 @@ public class AntebellumPluginMenu extends Menu {
 			public void actionPerformed(ActionEvent selection) {
 				String label = "Find Name";
 
-				JTextField lastName = new JTextField("", 30);
+				final JTextField lastName = new JTextField("", 30);
 				lastName.setPreferredSize(new Dimension(350,25));
 				//JTextField projectName = new JTextField("", 30);
 				
-				JComboBox possibleVals = new JComboBox();
+				final JComboBox possibleVals = new JComboBox();
 				possibleVals.setEnabled(false);
 				possibleVals.setPreferredSize(new Dimension(350,25));
 				
@@ -88,6 +93,23 @@ public class AntebellumPluginMenu extends Menu {
 				search.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent selection) {
 						// query the database
+						try {
+							String json = "";
+							String line;
+							URL url = new URL("http://academical.village.virginia.edu/academical_db/people/find_people?term=" + lastName.getText());
+							BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+							while ((line = in.readLine()) != null) {
+								json += line;
+							}
+							JSONObject obj = new JSONObject(json);
+							
+							// Read the JSON and update possibleVals
+							
+							possibleVals.setEnabled(true);
+						} catch (Exception e) {
+							possibleVals.setEnabled(false);
+						}
+						
 						return;
 					}
 				});
@@ -97,6 +119,7 @@ public class AntebellumPluginMenu extends Menu {
 				insert.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent selection) {
 						// Insert into the page
+						// Get the selected value, grab the ID, then insert into the document
 						return;
 					}
 				});
