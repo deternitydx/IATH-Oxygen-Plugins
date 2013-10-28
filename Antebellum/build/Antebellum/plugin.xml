@@ -2,7 +2,7 @@
 <plugin
     name="Antebellum Name Search"
     description="Query and insert an ID from the Antebellum Database"
-    version="0.0.2"
+    version="0.1.0"
     vendor="Institute for Advanced Technology in the Humanities"
     class="edu.virginia.iath.oxygenplugins.antebellum.AntebellumPlugin">
     <runtime>
