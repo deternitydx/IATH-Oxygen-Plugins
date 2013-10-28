@@ -104,6 +104,8 @@ public class AntebellumPluginMenu extends Menu {
 
 							// Read the JSON and update possibleVals
 							possibleVals.removeAllItems();
+							possibleVals.setEnabled(false);
+							
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
 								String name = cur.getString("label");
@@ -111,9 +113,8 @@ public class AntebellumPluginMenu extends Menu {
 								name = split[0].trim();
 								String id = split[1].replace(")", "").trim();
 								possibleVals.addItem(new ComboBoxObject(name, id));
+								possibleVals.setEnabled(true);
 							}
-
-							possibleVals.setEnabled(true);
 						} catch (Exception e) {
 							e.printStackTrace();
 							possibleVals.setEnabled(false);
