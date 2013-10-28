@@ -100,7 +100,6 @@ public class AntebellumPluginMenu extends Menu {
 							while ((line = in.readLine()) != null) {
 								json += line;
 							}
-							System.err.println(json);
 							JSONArray obj = new JSONArray(json);
 
 							// Read the JSON and update possibleVals
@@ -130,7 +129,6 @@ public class AntebellumPluginMenu extends Menu {
 					public void actionPerformed(ActionEvent sel) {
 						// Insert into the page
 						// Get the selected value, grab the ID, then insert into the document
-						System.err.println(((ComboBoxObject) possibleVals.getSelectedItem()).debugInfo());
 
 						// Get the editor
 						WSTextEditorPage ed = null;
