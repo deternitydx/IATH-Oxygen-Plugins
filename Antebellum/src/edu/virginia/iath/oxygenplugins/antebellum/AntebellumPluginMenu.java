@@ -105,7 +105,7 @@ public class AntebellumPluginMenu extends Menu {
 							// Read the JSON and update possibleVals
 							possibleVals.removeAllItems();
 							possibleVals.setEnabled(false);
-							
+
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
 								String name = cur.getString("label");
@@ -146,6 +146,10 @@ public class AntebellumPluginMenu extends Menu {
 						ed.deleteSelection();
 						javax.swing.text.Document doc = ed.getDocument();
 						try {
+							if (selectionOffset > 0 && !doc.getText(selectionOffset - 1, 1).equals(" "))
+								result = " " + result;
+							if (selectionOffset > 0 && !doc.getText(selectionOffset,1).equals(" ") && !doc.getText(selectionOffset,1).equals(">"))
+								result = result + " ";
 							doc.insertString(selectionOffset, result,
 									javax.swing.text.SimpleAttributeSet.EMPTY);
 						} catch (javax.swing.text.BadLocationException b) {
@@ -188,94 +192,6 @@ public class AntebellumPluginMenu extends Menu {
 			}
 		});
 		this.add(search);
-
-
-
-
-		// Add a divider
-		this.addSeparator();
-
-		// Add the insert ID menu item
-		JMenuItem menuItem = new JMenuItem("Insert Unique ID");
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G,
-				InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
-		ActionListener action = new ActionListener() {
-			public void actionPerformed(ActionEvent actionEvent) {
-				// call something on the action
-
-				// Get the editor
-				WSTextEditorPage ed = null;
-				WSEditor editorAccess = ws.getCurrentEditorAccess(StandalonePluginWorkspace.MAIN_EDITING_AREA);
-				if (editorAccess != null && editorAccess.getCurrentPage() instanceof WSTextEditorPage) {
-					ed = (WSTextEditorPage)editorAccess.getCurrentPage();
-				}
-
-				// Check that the attribute can be put here:
-				boolean allowedHere = false;
-				if (ed != null && ed instanceof WSXMLTextEditorPage) {
-					WSTextEditorPage textpage = (WSXMLTextEditorPage) ed;
-					WSTextXMLSchemaManager schema = textpage.getXMLSchemaManager();
-					try {
-						// use the schema to get a context-based list of allowable elements
-						int selectionOffset = ed.getSelectionStart();
-						WhatAttributesCanGoHereContext elContext = schema.createWhatAttributesCanGoHereContext(selectionOffset);
-						List<CIAttribute> attributes;
-						attributes = schema.whatAttributesCanGoHere(elContext);
-
-						// loop through the list to see if the tag we want to add
-						// matches a name on any of the allowed elements
-						for (int i=0; attributes != null && i < attributes.size(); i++) {
-							ro.sync.contentcompletion.xml.CIAttribute at = attributes.get(i);
-							if (at.getName().equals("id")) {
-								allowedHere = true;
-								break;
-							}
-						}
-					} catch (Exception e) {
-						// If any exception occurs, then this is not allowed here, so we won't continue
-						allowedHere = false;
-					}
-				}
-
-
-
-
-				// Insert the ID attribute into the document
-				if (allowedHere) {
-					// Grab the next ID
-					String nextID = options.getNextID();
-
-					// Plug the ID into the result
-					String result = "id=\"" + nextID + "\"";
-
-					ed.beginCompoundUndoableEdit();
-					int selectionOffset = ed.getSelectionStart();
-					ed.deleteSelection();
-					javax.swing.text.Document doc = ed.getDocument();
-					try {
-						if (selectionOffset > 0 && !doc.getText(selectionOffset - 1, 1).equals(" "))
-							result = " " + result;
-						if (selectionOffset > 0 && !doc.getText(selectionOffset,1).equals(" ") && !doc.getText(selectionOffset,1).equals(">"))
-							result = result + " ";
-						doc.insertString(selectionOffset, result,
-								javax.swing.text.SimpleAttributeSet.EMPTY);
-					} catch (javax.swing.text.BadLocationException b) {
-						// Okay if it doesn't work
-					}
-					ed.endCompoundUndoableEdit();
-				} else {
-					// The ID attribute is not allowed here in the document, so give an error message
-					JOptionPane.showMessageDialog((java.awt.Frame) ws.getParentFrame(),
-							"The 'id' attribute is not allowed in the current context.", "Warning", JOptionPane.ERROR_MESSAGE);
-				}
-
-
-
-
-			}
-		};
-		menuItem.addActionListener(action);
-		//this.add(menuItem);
 
 	}
 
