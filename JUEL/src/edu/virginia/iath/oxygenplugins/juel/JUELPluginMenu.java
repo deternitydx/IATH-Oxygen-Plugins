@@ -74,7 +74,7 @@ public class JUELPluginMenu extends Menu {
 		// setup the options
 		//options.readStorage();
 
-
+		// Find names
 		JMenuItem search = new JMenuItem("Find Name");
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent selection) {
@@ -109,9 +109,7 @@ public class JUELPluginMenu extends Menu {
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
 								String name = cur.getString("label");
-								String[] split = name.split("\\(");
-								name = split[0].trim();
-								String id = split[1].replace(")", "").trim();
+								String id = "P" + cur.getString("value");
 								possibleVals.addItem(new ComboBoxObject(name, id));
 								possibleVals.setEnabled(true);
 							}
@@ -185,14 +183,352 @@ public class JUELPluginMenu extends Menu {
 
 				JOptionPane.showMessageDialog((java.awt.Frame)ws.getParentFrame(), addPanel, label, JOptionPane.PLAIN_MESSAGE);
 
-				//int result = JOptionPane.showConfirmDialog((java.awt.Frame)ws.getParentFrame(),
-				//		addPanel, label, JOptionPane.CANCEL_OPTION);
+			}
+		});
+		this.add(search);
+		
+		// Find places
+		search = new JMenuItem("Find Place");
+		search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent selection) {
+				String label = "Find Place";
 
+				final JTextField searchText = new JTextField("", 30);
+				searchText.setPreferredSize(new Dimension(350,25));
+				//JTextField projectName = new JTextField("", 30);
+
+				final JComboBox possibleVals = new JComboBox();
+				possibleVals.setEnabled(false);
+				possibleVals.setPreferredSize(new Dimension(350,25));
+
+				JButton search = new JButton("Search");
+				search.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent selection) {
+						// query the database
+						try {
+							String json = "";
+							String line;
+							URL url = new URL("http://academical.village.virginia.edu/academical_db/places/find_places?term=" + searchText.getText());
+							BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+							while ((line = in.readLine()) != null) {
+								json += line;
+							}
+							JSONArray obj = new JSONArray(json);
+
+							// Read the JSON and update possibleVals
+							possibleVals.removeAllItems();
+							possibleVals.setEnabled(false);
+
+							for (int i = 0; i < obj.length(); i++) {
+								JSONObject cur = obj.getJSONObject(i);
+								String name = cur.getString("label");
+								String id = "PL" + cur.getString("value");
+								possibleVals.addItem(new ComboBoxObject(name, id));
+								possibleVals.setEnabled(true);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							possibleVals.setEnabled(false);
+						}
+
+						return;
+					}
+				});
+				search.setPreferredSize(new Dimension(100,25));
+
+				JButton insert = new JButton("Insert");
+				insert.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent sel) {
+						// Insert into the page
+						// Get the selected value, grab the ID, then insert into the document
+
+						// Get the editor
+						WSTextEditorPage ed = null;
+						WSEditor editorAccess = ws.getCurrentEditorAccess(StandalonePluginWorkspace.MAIN_EDITING_AREA);
+						if (editorAccess != null && editorAccess.getCurrentPage() instanceof WSTextEditorPage) {
+							ed = (WSTextEditorPage)editorAccess.getCurrentPage();
+						}
+
+						String result = "key=\"" + ((ComboBoxObject) possibleVals.getSelectedItem()).id + "\"";
+
+						// Update the text in the document
+						ed.beginCompoundUndoableEdit();
+						int selectionOffset = ed.getSelectionStart();
+						ed.deleteSelection();
+						javax.swing.text.Document doc = ed.getDocument();
+						try {
+							if (selectionOffset > 0 && !doc.getText(selectionOffset - 1, 1).equals(" "))
+								result = " " + result;
+							if (selectionOffset > 0 && !doc.getText(selectionOffset,1).equals(" ") && !doc.getText(selectionOffset,1).equals(">"))
+								result = result + " ";
+							doc.insertString(selectionOffset, result,
+									javax.swing.text.SimpleAttributeSet.EMPTY);
+						} catch (javax.swing.text.BadLocationException b) {
+							// Okay if it doesn't work
+						}
+						ed.endCompoundUndoableEdit();
+
+						return;
+					}
+				});
+				insert.setPreferredSize(new Dimension(100,25));
+
+
+
+				java.awt.GridLayout layoutOuter = new java.awt.GridLayout(3,1);
+				java.awt.FlowLayout layout = new java.awt.FlowLayout(FlowLayout.RIGHT); // rows, columns
+
+				JPanel addPanel = new JPanel();
+				JPanel addPanelInner = new JPanel();
+				addPanel.setLayout(layoutOuter);
+				addPanel.add(new JLabel("Search for last name, then choose a full name from the list below"));
+				addPanelInner.setLayout(layout);
+				addPanelInner.add(new JLabel("Search Last Name: "));
+				addPanelInner.add(searchText);
+				addPanelInner.add(search);
+				addPanel.add(addPanelInner);
+				addPanelInner = new JPanel();
+				addPanelInner.setLayout(layout);
+				addPanelInner.add(new JLabel("Narrow Search: "));
+				addPanelInner.add(possibleVals);
+				addPanelInner.add(insert);
+				addPanel.add(addPanelInner);
+
+				JOptionPane.showMessageDialog((java.awt.Frame)ws.getParentFrame(), addPanel, label, JOptionPane.PLAIN_MESSAGE);
+
+			}
+		});
+		this.add(search);
+		
+		/*********************
+		 * Doesn't currently have JSON query support
+		// Find corporate bodies
+		search = new JMenuItem("Find Corporate Body");
+		search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent selection) {
+				String label = "Find Corporate Body";
+
+				final JTextField searchText = new JTextField("", 30);
+				searchText.setPreferredSize(new Dimension(350,25));
+				//JTextField projectName = new JTextField("", 30);
+
+				final JComboBox possibleVals = new JComboBox();
+				possibleVals.setEnabled(false);
+				possibleVals.setPreferredSize(new Dimension(350,25));
+
+				JButton search = new JButton("Search");
+				search.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent selection) {
+						// query the database
+						try {
+							String json = "";
+							String line;
+							URL url = new URL("http://academical.village.virginia.edu/academical_db/places/find_places?term=" + searchText.getText());
+							BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+							while ((line = in.readLine()) != null) {
+								json += line;
+							}
+							JSONArray obj = new JSONArray(json);
+
+							// Read the JSON and update possibleVals
+							possibleVals.removeAllItems();
+							possibleVals.setEnabled(false);
+
+							for (int i = 0; i < obj.length(); i++) {
+								JSONObject cur = obj.getJSONObject(i);
+								String name = cur.getString("label");
+								String id = "CB" + cur.getString("value");
+								possibleVals.addItem(new ComboBoxObject(name, id));
+								possibleVals.setEnabled(true);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							possibleVals.setEnabled(false);
+						}
+
+						return;
+					}
+				});
+				search.setPreferredSize(new Dimension(100,25));
+
+				JButton insert = new JButton("Insert");
+				insert.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent sel) {
+						// Insert into the page
+						// Get the selected value, grab the ID, then insert into the document
+
+						// Get the editor
+						WSTextEditorPage ed = null;
+						WSEditor editorAccess = ws.getCurrentEditorAccess(StandalonePluginWorkspace.MAIN_EDITING_AREA);
+						if (editorAccess != null && editorAccess.getCurrentPage() instanceof WSTextEditorPage) {
+							ed = (WSTextEditorPage)editorAccess.getCurrentPage();
+						}
+
+						String result = "key=\"" + ((ComboBoxObject) possibleVals.getSelectedItem()).id + "\"";
+
+						// Update the text in the document
+						ed.beginCompoundUndoableEdit();
+						int selectionOffset = ed.getSelectionStart();
+						ed.deleteSelection();
+						javax.swing.text.Document doc = ed.getDocument();
+						try {
+							if (selectionOffset > 0 && !doc.getText(selectionOffset - 1, 1).equals(" "))
+								result = " " + result;
+							if (selectionOffset > 0 && !doc.getText(selectionOffset,1).equals(" ") && !doc.getText(selectionOffset,1).equals(">"))
+								result = result + " ";
+							doc.insertString(selectionOffset, result,
+									javax.swing.text.SimpleAttributeSet.EMPTY);
+						} catch (javax.swing.text.BadLocationException b) {
+							// Okay if it doesn't work
+						}
+						ed.endCompoundUndoableEdit();
+
+						return;
+					}
+				});
+				insert.setPreferredSize(new Dimension(100,25));
+
+
+
+				java.awt.GridLayout layoutOuter = new java.awt.GridLayout(3,1);
+				java.awt.FlowLayout layout = new java.awt.FlowLayout(FlowLayout.RIGHT); // rows, columns
+
+				JPanel addPanel = new JPanel();
+				JPanel addPanelInner = new JPanel();
+				addPanel.setLayout(layoutOuter);
+				addPanel.add(new JLabel("Search for last name, then choose a full name from the list below"));
+				addPanelInner.setLayout(layout);
+				addPanelInner.add(new JLabel("Search Last Name: "));
+				addPanelInner.add(searchText);
+				addPanelInner.add(search);
+				addPanel.add(addPanelInner);
+				addPanelInner = new JPanel();
+				addPanelInner.setLayout(layout);
+				addPanelInner.add(new JLabel("Narrow Search: "));
+				addPanelInner.add(possibleVals);
+				addPanelInner.add(insert);
+				addPanel.add(addPanelInner);
+
+				JOptionPane.showMessageDialog((java.awt.Frame)ws.getParentFrame(), addPanel, label, JOptionPane.PLAIN_MESSAGE);
+
+			}
+		});
+		this.add(search);
+		
+		// Find Courses
+		search = new JMenuItem("Find Course");
+		search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent selection) {
+				String label = "Find Course";
+
+				final JTextField searchText = new JTextField("", 30);
+				searchText.setPreferredSize(new Dimension(350,25));
+				//JTextField projectName = new JTextField("", 30);
+
+				final JComboBox possibleVals = new JComboBox();
+				possibleVals.setEnabled(false);
+				possibleVals.setPreferredSize(new Dimension(350,25));
+
+				JButton search = new JButton("Search");
+				search.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent selection) {
+						// query the database
+						try {
+							String json = "";
+							String line;
+							URL url = new URL("http://academical.village.virginia.edu/academical_db/places/find_places?term=" + searchText.getText());
+							BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+							while ((line = in.readLine()) != null) {
+								json += line;
+							}
+							JSONArray obj = new JSONArray(json);
+
+							// Read the JSON and update possibleVals
+							possibleVals.removeAllItems();
+							possibleVals.setEnabled(false);
+
+							for (int i = 0; i < obj.length(); i++) {
+								JSONObject cur = obj.getJSONObject(i);
+								String name = cur.getString("label");
+								String id = "C" + cur.getString("value");
+								possibleVals.addItem(new ComboBoxObject(name, id));
+								possibleVals.setEnabled(true);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							possibleVals.setEnabled(false);
+						}
+
+						return;
+					}
+				});
+				search.setPreferredSize(new Dimension(100,25));
+
+				JButton insert = new JButton("Insert");
+				insert.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent sel) {
+						// Insert into the page
+						// Get the selected value, grab the ID, then insert into the document
+
+						// Get the editor
+						WSTextEditorPage ed = null;
+						WSEditor editorAccess = ws.getCurrentEditorAccess(StandalonePluginWorkspace.MAIN_EDITING_AREA);
+						if (editorAccess != null && editorAccess.getCurrentPage() instanceof WSTextEditorPage) {
+							ed = (WSTextEditorPage)editorAccess.getCurrentPage();
+						}
+
+						String result = "key=\"" + ((ComboBoxObject) possibleVals.getSelectedItem()).id + "\"";
+
+						// Update the text in the document
+						ed.beginCompoundUndoableEdit();
+						int selectionOffset = ed.getSelectionStart();
+						ed.deleteSelection();
+						javax.swing.text.Document doc = ed.getDocument();
+						try {
+							if (selectionOffset > 0 && !doc.getText(selectionOffset - 1, 1).equals(" "))
+								result = " " + result;
+							if (selectionOffset > 0 && !doc.getText(selectionOffset,1).equals(" ") && !doc.getText(selectionOffset,1).equals(">"))
+								result = result + " ";
+							doc.insertString(selectionOffset, result,
+									javax.swing.text.SimpleAttributeSet.EMPTY);
+						} catch (javax.swing.text.BadLocationException b) {
+							// Okay if it doesn't work
+						}
+						ed.endCompoundUndoableEdit();
+
+						return;
+					}
+				});
+				insert.setPreferredSize(new Dimension(100,25));
+
+
+
+				java.awt.GridLayout layoutOuter = new java.awt.GridLayout(3,1);
+				java.awt.FlowLayout layout = new java.awt.FlowLayout(FlowLayout.RIGHT); // rows, columns
+
+				JPanel addPanel = new JPanel();
+				JPanel addPanelInner = new JPanel();
+				addPanel.setLayout(layoutOuter);
+				addPanel.add(new JLabel("Search for last name, then choose a full name from the list below"));
+				addPanelInner.setLayout(layout);
+				addPanelInner.add(new JLabel("Search Last Name: "));
+				addPanelInner.add(searchText);
+				addPanelInner.add(search);
+				addPanel.add(addPanelInner);
+				addPanelInner = new JPanel();
+				addPanelInner.setLayout(layout);
+				addPanelInner.add(new JLabel("Narrow Search: "));
+				addPanelInner.add(possibleVals);
+				addPanelInner.add(insert);
+				addPanel.add(addPanelInner);
+
+				JOptionPane.showMessageDialog((java.awt.Frame)ws.getParentFrame(), addPanel, label, JOptionPane.PLAIN_MESSAGE);
 
 			}
 		});
 		this.add(search);
 
+		 */
 	}
 
 	public static void main(String[] args) {
