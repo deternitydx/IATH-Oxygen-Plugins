@@ -109,7 +109,7 @@ public class JUELPluginMenu extends Menu {
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
 								String name = cur.getString("label");
-								String id = "P" + cur.getString("value");
+								String id = "P" + cur.getInt("value");
 								possibleVals.addItem(new ComboBoxObject(name, id));
 								possibleVals.setEnabled(true);
 							}
@@ -221,8 +221,8 @@ public class JUELPluginMenu extends Menu {
 
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
-								String name = cur.getString("label");
-								String id = "PL" + cur.getString("value");
+								String id = "PL" + cur.getInt("value");
+								String name = cur.getString("label") + "(" + id + ")";
 								possibleVals.addItem(new ComboBoxObject(name, id));
 								possibleVals.setEnabled(true);
 							}
@@ -281,9 +281,9 @@ public class JUELPluginMenu extends Menu {
 				JPanel addPanel = new JPanel();
 				JPanel addPanelInner = new JPanel();
 				addPanel.setLayout(layoutOuter);
-				addPanel.add(new JLabel("Search for last name, then choose a full name from the list below"));
+				addPanel.add(new JLabel("Search for place name, then choose a full name from the list below"));
 				addPanelInner.setLayout(layout);
-				addPanelInner.add(new JLabel("Search Last Name: "));
+				addPanelInner.add(new JLabel("Search Place: "));
 				addPanelInner.add(searchText);
 				addPanelInner.add(search);
 				addPanel.add(addPanelInner);
@@ -337,7 +337,7 @@ public class JUELPluginMenu extends Menu {
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
 								String name = cur.getString("label");
-								String id = "CB" + cur.getString("value");
+								String id = "CB" + cur.getInt("value");
 								possibleVals.addItem(new ComboBoxObject(name, id));
 								possibleVals.setEnabled(true);
 							}
@@ -450,7 +450,7 @@ public class JUELPluginMenu extends Menu {
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
 								String name = cur.getString("label");
-								String id = "C" + cur.getString("value");
+								String id = "C" + cur.getInt("value");
 								possibleVals.addItem(new ComboBoxObject(name, id));
 								possibleVals.setEnabled(true);
 							}
