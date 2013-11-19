@@ -109,7 +109,7 @@ public class JUELPluginMenu extends Menu {
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
 								String name = cur.getString("label");
-								String id = "P" + cur.getInt("value");
+								String id = String.format("P%05d",cur.getInt("value"));
 								possibleVals.addItem(new ComboBoxObject(name, id));
 								possibleVals.setEnabled(true);
 							}
@@ -221,7 +221,7 @@ public class JUELPluginMenu extends Menu {
 
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
-								String id = "PL" + cur.getInt("value");
+								String id = String.format("PL%04d",cur.getInt("value"));
 								String name = cur.getString("label") + " (" + id + ")";
 								possibleVals.addItem(new ComboBoxObject(name, id));
 								possibleVals.setEnabled(true);
@@ -321,7 +321,7 @@ public class JUELPluginMenu extends Menu {
 						try {
 							String json = "";
 							String line;
-							URL url = new URL("http://academical.village.virginia.edu/academical_db/places/find_places?term=" + searchText.getText());
+							URL url = new URL("http://academical.village.virginia.edu/academical_db/corporate_bodies/find?term=" + searchText.getText());
 							BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 							while ((line = in.readLine()) != null) {
 								json += line;
@@ -334,7 +334,7 @@ public class JUELPluginMenu extends Menu {
 
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
-								String id = "CB" + cur.getInt("value");
+								String id = String.format("CB%04d",cur.getInt("value"));
 								String name = cur.getString("label") + " (" + id + ")";
 								possibleVals.addItem(new ComboBoxObject(name, id));
 								possibleVals.setEnabled(true);
@@ -434,7 +434,7 @@ public class JUELPluginMenu extends Menu {
 						try {
 							String json = "";
 							String line;
-							URL url = new URL("http://academical.village.virginia.edu/academical_db/places/find_places?term=" + searchText.getText());
+							URL url = new URL("http://academical.village.virginia.edu/academical_db/courses/find?term=" + searchText.getText());
 							BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 							while ((line = in.readLine()) != null) {
 								json += line;
@@ -447,7 +447,7 @@ public class JUELPluginMenu extends Menu {
 
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
-								String id = "C" + cur.getInt("value");
+								String id = String.format("C%04d",cur.getInt("value"));
 								String name = cur.getString("label") + " (" + id + ")";
 								possibleVals.addItem(new ComboBoxObject(name, id));
 								possibleVals.setEnabled(true);
