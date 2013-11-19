@@ -222,7 +222,7 @@ public class JUELPluginMenu extends Menu {
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
 								String id = "PL" + cur.getInt("value");
-								String name = cur.getString("label") + "(" + id + ")";
+								String name = cur.getString("label") + " (" + id + ")";
 								possibleVals.addItem(new ComboBoxObject(name, id));
 								possibleVals.setEnabled(true);
 							}
@@ -281,9 +281,9 @@ public class JUELPluginMenu extends Menu {
 				JPanel addPanel = new JPanel();
 				JPanel addPanelInner = new JPanel();
 				addPanel.setLayout(layoutOuter);
-				addPanel.add(new JLabel("Search for place name, then choose a full name from the list below"));
+				addPanel.add(new JLabel("Search for a place name, then choose one from the list below"));
 				addPanelInner.setLayout(layout);
-				addPanelInner.add(new JLabel("Search Place: "));
+				addPanelInner.add(new JLabel("Search Keyword: "));
 				addPanelInner.add(searchText);
 				addPanelInner.add(search);
 				addPanel.add(addPanelInner);
@@ -300,8 +300,6 @@ public class JUELPluginMenu extends Menu {
 		});
 		this.add(search);
 		
-		/*********************
-		 * Doesn't currently have JSON query support
 		// Find corporate bodies
 		search = new JMenuItem("Find Corporate Body");
 		search.addActionListener(new ActionListener() {
@@ -336,8 +334,8 @@ public class JUELPluginMenu extends Menu {
 
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
-								String name = cur.getString("label");
 								String id = "CB" + cur.getInt("value");
+								String name = cur.getString("label") + " (" + id + ")";
 								possibleVals.addItem(new ComboBoxObject(name, id));
 								possibleVals.setEnabled(true);
 							}
@@ -396,9 +394,9 @@ public class JUELPluginMenu extends Menu {
 				JPanel addPanel = new JPanel();
 				JPanel addPanelInner = new JPanel();
 				addPanel.setLayout(layoutOuter);
-				addPanel.add(new JLabel("Search for last name, then choose a full name from the list below"));
+				addPanel.add(new JLabel("Search for a corporate body, then one from the list below"));
 				addPanelInner.setLayout(layout);
-				addPanelInner.add(new JLabel("Search Last Name: "));
+				addPanelInner.add(new JLabel("Search Keyword: "));
 				addPanelInner.add(searchText);
 				addPanelInner.add(search);
 				addPanel.add(addPanelInner);
@@ -449,8 +447,8 @@ public class JUELPluginMenu extends Menu {
 
 							for (int i = 0; i < obj.length(); i++) {
 								JSONObject cur = obj.getJSONObject(i);
-								String name = cur.getString("label");
 								String id = "C" + cur.getInt("value");
+								String name = cur.getString("label") + " (" + id + ")";
 								possibleVals.addItem(new ComboBoxObject(name, id));
 								possibleVals.setEnabled(true);
 							}
@@ -509,9 +507,9 @@ public class JUELPluginMenu extends Menu {
 				JPanel addPanel = new JPanel();
 				JPanel addPanelInner = new JPanel();
 				addPanel.setLayout(layoutOuter);
-				addPanel.add(new JLabel("Search for last name, then choose a full name from the list below"));
+				addPanel.add(new JLabel("Search for a course, then choose one from the list below"));
 				addPanelInner.setLayout(layout);
-				addPanelInner.add(new JLabel("Search Last Name: "));
+				addPanelInner.add(new JLabel("Search Keyword: "));
 				addPanelInner.add(searchText);
 				addPanelInner.add(search);
 				addPanel.add(addPanelInner);
@@ -527,8 +525,6 @@ public class JUELPluginMenu extends Menu {
 			}
 		});
 		this.add(search);
-
-		 */
 	}
 
 	public static void main(String[] args) {
