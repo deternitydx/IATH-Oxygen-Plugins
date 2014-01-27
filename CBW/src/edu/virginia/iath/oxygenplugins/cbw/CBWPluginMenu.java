@@ -25,7 +25,9 @@ import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -89,6 +91,13 @@ public class CBWPluginMenu extends Menu {
 				possibleVals.setEnabled(false);
 				possibleVals.setPreferredSize(new Dimension(350,25));
 
+				final Map<String,String> types = new HashMap<String,String>();
+            	types.put("Persona Type", "personaType");
+            	types.put("Stage of Life", "stageOfLife");
+            	types.put("Event", "event");
+            	types.put("Persona Description", "topos");
+            	types.put("Discourse", "discourse");
+				
 				itemType.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent selection) {
 						
@@ -104,7 +113,7 @@ public class CBWPluginMenu extends Menu {
 							
 							WSTextEditorPage textpage = (WSXMLTextEditorPage) ed;
 				            WSTextXMLSchemaManager schema = textpage.getXMLSchemaManager();
-				            
+				            possibleVals.removeAllItems();
 				            try{
 				            	// Build an element of type
 				            	//WhatElementsCanGoHereContext ctxt = new WhatElementsCanGoHereContext();
@@ -112,14 +121,19 @@ public class CBWPluginMenu extends Menu {
 				            	// Get current context and add item, then ask for values
 				            	WhatElementsCanGoHereContext ctxt = schema.createWhatElementsCanGoHereContext(ed.getSelectionStart());
 				            	ContextElement elem = new ContextElement();
-				            	elem.setQName("event"); elem.setType("event");
+				            	elem.setQName(types.get(itemType.getSelectedItem())); 
+				            	elem.setType(types.get(itemType.getSelectedItem()));
 				            	ctxt.pushContextElement(elem, null);
 				            	elem = new ContextElement();
 				            	elem.setQName("type"); elem.setType("type");
 				            	ctxt.pushContextElement(elem, null);
 				            	
 				            	List<CIValue> vals = schema.whatPossibleValuesHasElement(ctxt);
+				            	for( CIValue val : vals) {
+				            		possibleVals.addItem(val.getValue());
+				            	}
 				            } catch (Exception e) {
+				            	e.printStackTrace();
 				            	System.err.println("Something went wrong");
 				            }
 							
@@ -133,6 +147,8 @@ public class CBWPluginMenu extends Menu {
 				JButton insert = new JButton("Insert");
 				insert.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent sel) {
+
+						String item = types.get(itemType.getSelectedItem());
 						// Insert into the page
 						// Get the selected value, grab the ID, then insert into the document
 
@@ -144,7 +160,10 @@ public class CBWPluginMenu extends Menu {
 						}
 
 						//String result = "key=\"" + ((ComboBoxObject) possibleVals.getSelectedItem()).id + "\"";
-						String result = ((String) possibleVals.getSelectedItem());
+						String result = "<" + item + ">\n";
+						result += "<textUnitReference></textUnitReference>\n";
+						result += "<type>" + ((String) possibleVals.getSelectedItem()) + "</type>\n";
+						result += "</" + item + ">\n";
 						
 						// Update the text in the document
 						ed.beginCompoundUndoableEdit();
@@ -156,6 +175,7 @@ public class CBWPluginMenu extends Menu {
 								javax.swing.text.SimpleAttributeSet.EMPTY);
 						} catch (javax.swing.text.BadLocationException b) {
 							// Okay if it doesn't work
+							System.err.println("Couldn't add to document");
 						}
 						ed.endCompoundUndoableEdit();
 
