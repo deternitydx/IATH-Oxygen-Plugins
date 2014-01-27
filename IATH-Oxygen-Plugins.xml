@@ -85,4 +85,24 @@
         </xt:description>
         <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
     </xt:extension>
+    <xt:extension id="edu.virginia.iath.snac.oxygenplugins.cbw.CBW">
+        <xt:location href="http://www.cs.virginia.edu/~jh2jf/iath/CBW.jar"/>
+        <xt:version>0.0.1</xt:version>
+        <xt:oxy_version>14.2+</xt:oxy_version>
+        <xt:type>plugin</xt:type>
+        <xt:author>Institute for Advanced Technology in the Humanities</xt:author>
+        <xt:name>CBW Item Insert</xt:name>
+        <xt:description><html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+                <title>CBW Item Insert</title>
+            </head>
+            <body>
+                <div>
+                <p>Allows the user to select from multiple objects, then choose a type of object based on schema and insert it into the document.</p>
+		</div>
+            </body>
+        </html>
+        </xt:description>
+        <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
+    </xt:extension>
 </xt:extensions>
