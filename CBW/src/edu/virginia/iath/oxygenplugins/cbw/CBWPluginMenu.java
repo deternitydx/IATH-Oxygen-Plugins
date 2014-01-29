@@ -16,8 +16,10 @@
  */
 package edu.virginia.iath.oxygenplugins.cbw;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -28,17 +30,23 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.SpringLayout;
+import javax.swing.SwingUtilities;
 
-import edu.virginia.iath.oxygenplugins.cbw.helpers.ComboBoxObject;
+import layout.SpringUtilities;
+
+import edu.virginia.iath.oxygenplugins.cbw.helpers.ChoiceBoxObject;
 import edu.virginia.iath.oxygenplugins.cbw.helpers.LocalOptions;
 
 import ro.sync.contentcompletion.xml.CIAttribute;
@@ -77,78 +85,53 @@ public class CBWPluginMenu extends Menu {
 		//options.readStorage();
 
 		// Find names
-		JMenuItem search = new JMenuItem("Insert Item");
+		JMenuItem search = new JMenuItem("Insert type");
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent selection) {
-				String boxtitle = "";
+				String boxtitle = "Insert Type";
 
-				String[] items = {"Select One", "Persona Type", "Stage of Life", "Event", "Persona Description", "Discourse"};
-				final JComboBox itemType = new JComboBox(items);
-				itemType.setPreferredSize(new Dimension(350,25));
-				//itemType.addItem("");
-
-				final JComboBox possibleVals = new JComboBox();
-				possibleVals.setEnabled(false);
-				possibleVals.setPreferredSize(new Dimension(350,25));
-
-				final Map<String,String> types = new HashMap<String,String>();
-            	types.put("Persona Type", "personaType");
-            	types.put("Stage of Life", "stageOfLife");
-            	types.put("Event", "event");
-            	types.put("Persona Description", "topos");
-            	types.put("Discourse", "discourse");
+				final Vector<String> possibleVals = new Vector<String>();
+				final Vector<ChoiceBoxObject> selections = new Vector<ChoiceBoxObject>();
 				
-				itemType.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent selection) {
-						
-						if (itemType.getSelectedItem().equals("Select One"))
-							possibleVals.setEnabled(false);
-						else {
-							// Pick which ones are useful
-							WSTextEditorPage ed = null;
-							WSEditor editorAccess = ws.getCurrentEditorAccess(StandalonePluginWorkspace.MAIN_EDITING_AREA);
-							if (editorAccess != null && editorAccess.getCurrentPage() instanceof WSTextEditorPage) {
-								ed = (WSTextEditorPage)editorAccess.getCurrentPage();
-							}
-							
-							WSTextEditorPage textpage = (WSXMLTextEditorPage) ed;
-				            WSTextXMLSchemaManager schema = textpage.getXMLSchemaManager();
-				            possibleVals.removeAllItems();
-				            try{
-				            	// Build an element of type
-				            	//WhatElementsCanGoHereContext ctxt = new WhatElementsCanGoHereContext();
-				            	
-				            	// Get current context and add item, then ask for values
-				            	WhatElementsCanGoHereContext ctxt = schema.createWhatElementsCanGoHereContext(ed.getSelectionStart());
-				            	ContextElement elem = new ContextElement();
-				            	elem.setQName(types.get(itemType.getSelectedItem())); 
-				            	elem.setType(types.get(itemType.getSelectedItem()));
-				            	ctxt.pushContextElement(elem, null);
-				            	elem = new ContextElement();
-				            	elem.setQName("type"); elem.setType("type");
-				            	ctxt.pushContextElement(elem, null);
-				            	
-				            	List<CIValue> vals = schema.whatPossibleValuesHasElement(ctxt);
-				            	for( CIValue val : vals) {
-				            		possibleVals.addItem(val.getValue());
-				            	}
-				            } catch (Exception e) {
-				            	e.printStackTrace();
-				            	System.err.println("Something went wrong");
-				            }
-							
-							// Set the box enabled
-							possibleVals.setEnabled(true);
-						}
-		            	return;
-					}
-				});
+
+				final JFrame frame = new JFrame(boxtitle);
+				final JPanel addPanel = new JPanel(new SpringLayout());
+				final JPanel selectionsPanel = new JPanel();
+				
+				// Pick which ones are useful
+				WSTextEditorPage ed = null;
+				WSEditor editorAccess = ws.getCurrentEditorAccess(StandalonePluginWorkspace.MAIN_EDITING_AREA);
+				if (editorAccess != null && editorAccess.getCurrentPage() instanceof WSTextEditorPage) {
+					ed = (WSTextEditorPage)editorAccess.getCurrentPage();
+				}
+				
+				WSTextEditorPage textpage = (WSXMLTextEditorPage) ed;
+	            WSTextXMLSchemaManager schema = textpage.getXMLSchemaManager();
+	            try{
+	            	// Build an element of type
+	            	//WhatElementsCanGoHereContext ctxt = new WhatElementsCanGoHereContext();
+	            	
+	            	// Get current context and add a <type> element to ask which values this element can take
+	            	WhatElementsCanGoHereContext ctxt = schema.createWhatElementsCanGoHereContext(ed.getSelectionStart());
+	            	ContextElement elem = new ContextElement();
+	            	elem.setQName("type"); elem.setType("type");
+	            	ctxt.pushContextElement(elem, null);
+	            	
+	            	// Populate the list of possible Values
+	            	List<CIValue> vals = schema.whatPossibleValuesHasElement(ctxt);
+	            	for( CIValue val : vals) {
+	            		possibleVals.add(val.getValue());
+	            	}
+	            } catch (Exception e) {
+	            	e.printStackTrace();
+	            	System.err.println("Something went wrong");
+	            }
+				
 
 				JButton insert = new JButton("Insert");
 				insert.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent sel) {
 
-						String item = types.get(itemType.getSelectedItem());
 						// Insert into the page
 						// Get the selected value, grab the ID, then insert into the document
 
@@ -160,10 +143,13 @@ public class CBWPluginMenu extends Menu {
 						}
 
 						//String result = "key=\"" + ((ComboBoxObject) possibleVals.getSelectedItem()).id + "\"";
-						String result = "<" + item + ">\n";
-						result += "<textUnitReference></textUnitReference>\n";
-						result += "<type>" + ((String) possibleVals.getSelectedItem()) + "</type>\n";
-						result += "</" + item + ">\n";
+						String result = "";
+						for (ChoiceBoxObject c : selections) {
+							if (c.getValue() != null) {
+								result += "<type>" + c.getValue() + "</type>";
+							}
+						}
+						
 						
 						// Update the text in the document
 						ed.beginCompoundUndoableEdit();
@@ -183,27 +169,62 @@ public class CBWPluginMenu extends Menu {
 					}
 				});
 				insert.setPreferredSize(new Dimension(100,25));
+				
+				JButton addAnother = new JButton("+");
+				addAnother.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent sel) {
+
+						// Add the initial selection box
+						ChoiceBoxObject c = new ChoiceBoxObject(possibleVals, selectionsPanel);
+						GridLayout g = (GridLayout) selectionsPanel.getLayout();
+						g.setRows(g.getRows() + 1);
+						selections.add(c);
+						selectionsPanel.add(c);
+						selectionsPanel.revalidate();
+						selectionsPanel.repaint();
+						frame.repaint();
+						frame.pack();
+						
+						return;
+					}
+				});
+				addAnother.setPreferredSize(new Dimension(100,25));
 
 
 
-				java.awt.GridLayout layoutOuter = new java.awt.GridLayout(5,1);
-				java.awt.FlowLayout layout = new java.awt.FlowLayout(FlowLayout.CENTER); // rows, columns
+				java.awt.GridLayout layoutOuter = new java.awt.GridLayout(4,1); // rows, columns
+				java.awt.FlowLayout layout = new java.awt.FlowLayout(FlowLayout.CENTER); 
 
-				JPanel addPanel = new JPanel();
-				JPanel addPanelInner = new JPanel();
-				addPanel.setLayout(layoutOuter);
-				addPanel.add(new JLabel("Choose an item type to insert."));
-				addPanelInner.setLayout(layout);
-				addPanelInner.add(itemType);
-				addPanel.add(addPanelInner);
-				addPanel.add(new JLabel("Then, choose the type of item.  Use the + button to add multple types."));
-				addPanelInner = new JPanel();
-				addPanelInner.setLayout(layout);
-				addPanelInner.add(possibleVals);
-				addPanel.add(addPanelInner);
+				//addPanel.setLayout(layoutOuter);
+				addPanel.add(new JLabel("Choose the type of item.  Use the + button to add multple types."));
+				selectionsPanel.setLayout(layout);
+				addPanel.add(selectionsPanel);
+				addPanel.add(addAnother);
 				addPanel.add(insert);
+				
+				//Lay out the panel.
+				SpringUtilities.makeCompactGrid(addPanel,
+				                                4, 1, 		 //rows, cols
+				                                6, 6,        //initX, initY
+				                                6, 6);       //xPad, yPad
 
-				JOptionPane.showMessageDialog((java.awt.Frame)ws.getParentFrame(), addPanel, boxtitle, JOptionPane.PLAIN_MESSAGE);
+				
+				// Add the initial selection box
+				selectionsPanel.setLayout(new java.awt.GridLayout(1,1));
+				ChoiceBoxObject c = new ChoiceBoxObject(possibleVals, selectionsPanel);
+				selections.add(c);
+				selectionsPanel.add(c);
+				selectionsPanel.revalidate();
+				selectionsPanel.repaint();
+				frame.repaint();
+				frame.pack();
+				
+				frame.setContentPane(addPanel);
+
+				frame.pack();
+
+				frame.setVisible(true);
+				//JOptionPane.showMessageDialog((java.awt.Frame)ws.getParentFrame(), addPanel, boxtitle, JOptionPane.PLAIN_MESSAGE);
 
 			}
 		});
