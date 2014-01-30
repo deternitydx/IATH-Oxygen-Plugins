@@ -85,8 +85,11 @@ public class CBWPluginMenu extends Menu {
 		//options.readStorage();
 
 		// Find names
-		JMenuItem search = new JMenuItem("Insert type");
-		search.addActionListener(new ActionListener() {
+		JMenuItem insertTypeMenuItem = new JMenuItem("Insert type");
+
+		insertTypeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T,
+				InputEvent.CTRL_MASK | InputEvent.ALT_MASK | InputEvent.SHIFT_MASK));
+		insertTypeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent selection) {
 				String boxtitle = "Insert Type";
 
@@ -97,6 +100,7 @@ public class CBWPluginMenu extends Menu {
 				final JFrame frame = new JFrame(boxtitle);
 				final JPanel addPanel = new JPanel(new SpringLayout());
 				final JPanel selectionsPanel = new JPanel();
+				
 				
 				// Pick which ones are useful
 				WSTextEditorPage ed = null;
@@ -159,6 +163,8 @@ public class CBWPluginMenu extends Menu {
 						try {
 							doc.insertString(selectionOffset, result,
 								javax.swing.text.SimpleAttributeSet.EMPTY);
+							frame.setVisible(false);
+							frame.dispose();
 						} catch (javax.swing.text.BadLocationException b) {
 							// Okay if it doesn't work
 							System.err.println("Couldn't add to document");
@@ -182,6 +188,7 @@ public class CBWPluginMenu extends Menu {
 						selectionsPanel.add(c);
 						selectionsPanel.revalidate();
 						selectionsPanel.repaint();
+						frame.pack();
 						frame.repaint();
 						frame.pack();
 						
@@ -216,19 +223,20 @@ public class CBWPluginMenu extends Menu {
 				selectionsPanel.add(c);
 				selectionsPanel.revalidate();
 				selectionsPanel.repaint();
-				frame.repaint();
-				frame.pack();
+				//frame.repaint();
+				//frame.pack();
 				
 				frame.setContentPane(addPanel);
-
+				frame.setLocationRelativeTo(null);
 				frame.pack();
-
+				frame.repaint();
+				frame.pack();
 				frame.setVisible(true);
 				//JOptionPane.showMessageDialog((java.awt.Frame)ws.getParentFrame(), addPanel, boxtitle, JOptionPane.PLAIN_MESSAGE);
 
 			}
 		});
-		this.add(search);
+		this.add(insertTypeMenuItem);
 		
 	}
 
