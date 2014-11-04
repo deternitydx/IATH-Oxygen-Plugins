@@ -95,7 +95,7 @@ public class JUELPluginMenu extends Menu {
 						try {
 							String json = "";
 							String line;
-							URL url = new URL("http://academical.village.virginia.edu/academical_db/people/find_people?term=" + lastName.getText());
+							URL url = new URL("http://juel.iath.virginia.edu/academical_db/people/find_people?term=" + lastName.getText());
 							BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 							while ((line = in.readLine()) != null) {
 								json += line;
