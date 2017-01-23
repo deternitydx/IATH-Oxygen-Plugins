@@ -77,6 +77,7 @@ public class LocalOptions {
 			{
 				databases = (HashMap<String,String>) obj;
 			}
+			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			databases = new HashMap<String,String>();
@@ -98,6 +99,7 @@ public class LocalOptions {
 			{
 				currentDB = (String) obj;
 			}
+			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			currentDB = null;
@@ -115,6 +117,7 @@ public class LocalOptions {
 					FileOutputStream(getWorkspace().getPreferencesDirectory() + "/GetIDPluginMap.data"));
 			// Write data to disk
 			writer.writeObject ( databases );
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -128,6 +131,7 @@ public class LocalOptions {
 					FileOutputStream(getWorkspace().getPreferencesDirectory() + "/GetIDPluginCur.data"));
 			// Write data to disk
 			writer2.writeObject ( currentDB );
+			writer2.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

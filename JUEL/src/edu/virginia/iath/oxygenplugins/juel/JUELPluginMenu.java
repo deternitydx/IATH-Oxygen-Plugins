@@ -20,12 +20,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -34,7 +31,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,12 +38,8 @@ import org.json.JSONObject;
 import edu.virginia.iath.oxygenplugins.juel.helpers.ComboBoxObject;
 import edu.virginia.iath.oxygenplugins.juel.helpers.LocalOptions;
 
-import ro.sync.contentcompletion.xml.CIAttribute;
-import ro.sync.contentcompletion.xml.WhatAttributesCanGoHereContext;
 import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.editor.page.text.WSTextEditorPage;
-import ro.sync.exml.workspace.api.editor.page.text.WSTextXMLSchemaManager;
-import ro.sync.exml.workspace.api.editor.page.text.xml.WSXMLTextEditorPage;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ui.Menu;
 
@@ -60,7 +52,6 @@ public class JUELPluginMenu extends Menu {
 
 
 	private StandalonePluginWorkspace ws = null;
-	private LocalOptions options = null;
 
 	private static String name = "JUEL";
 
@@ -69,10 +60,6 @@ public class JUELPluginMenu extends Menu {
 	public JUELPluginMenu(StandalonePluginWorkspace spw, LocalOptions ops) {
 		super(name, true);
 		ws = spw;
-		options = ops;
-
-		// setup the options
-		//options.readStorage();
 
 		// Find names
 		JMenuItem search = new JMenuItem("Find Name");
@@ -95,7 +82,7 @@ public class JUELPluginMenu extends Menu {
 						try {
 							String json = "";
 							String line;
-							URL url = new URL("http://juel.iath.virginia.edu/academical_db/people/find_people?term=" + lastName.getText());
+							URL url = new URL("http://juel.iath.virginia.edu/academical_db/people/find_people?all=true&term=" + lastName.getText());
 							BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 							while ((line = in.readLine()) != null) {
 								json += line;
