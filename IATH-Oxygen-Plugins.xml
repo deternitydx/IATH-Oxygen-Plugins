@@ -6,7 +6,7 @@
     xsi:schemaLocation="http://www.oxygenxml.com/ns/extension http://www.oxygenxml.com/ns/extension/extensions.xsd">
 
     <xt:extension id="edu.virginia.iath.snac.oxygenplugins.sample.Sample">
-        <xt:location href="https://github.com/deternitydx/IATH-Oxygen-Plugins/blob/master/Sample/build/sample.jar?raw=true"/>
+        <xt:location href="https://github.com/deternitydx/IATH-Oxygen-Plugins/blob/master/jars/sample.jar?raw=true"/>
         <xt:version>0.0.3</xt:version>
         <xt:oxy_version>14.2+</xt:oxy_version>
         <xt:type>plugin</xt:type>
@@ -26,7 +26,7 @@
         <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
     </xt:extension>
     <xt:extension id="edu.virginia.iath.oxygenplugins.getid.GetID">
-        <xt:location href="http://www.cs.virginia.edu/~jh2jf/iath/getid.jar"/>
+        <xt:location href="https://github.com/deternitydx/IATH-Oxygen-Plugins/blob/master/jars/getid.jar?raw=true"/>
         <xt:version>0.2.2</xt:version>
         <xt:oxy_version>14.2+</xt:oxy_version>
         <xt:type>plugin</xt:type>
@@ -46,7 +46,7 @@
         <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
     </xt:extension>
     <xt:extension id="edu.virginia.iath.snac.oxygenplugins.dateparser.DateParser">
-        <xt:location href="http://www.cs.virginia.edu/~jh2jf/iath/DateParser.jar"/>
+        <xt:location href="https://github.com/deternitydx/IATH-Oxygen-Plugins/blob/master/jars/DateParser.jar?raw=true"/>
         <xt:version>0.0.2</xt:version>
         <xt:oxy_version>14.2+</xt:oxy_version>
         <xt:type>plugin</xt:type>
@@ -66,7 +66,7 @@
         <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
     </xt:extension>
     <xt:extension id="edu.virginia.iath.snac.oxygenplugins.juel.JUEL">
-        <xt:location href="http://www.cs.virginia.edu/~jh2jf/iath/JUEL.jar"/>
+        <xt:location href="https://github.com/deternitydx/IATH-Oxygen-Plugins/blob/master/jars/JUEL.jar?raw=true"/>
         <xt:version>0.4.0</xt:version>
         <xt:oxy_version>14.2+</xt:oxy_version>
         <xt:type>plugin</xt:type>
@@ -86,7 +86,7 @@
         <xt:license><xi:include href="LICENSE" parse="text"/></xt:license>
     </xt:extension>
     <xt:extension id="edu.virginia.iath.snac.oxygenplugins.cbw.CBW">
-        <xt:location href="http://www.cs.virginia.edu/~jh2jf/iath/CBW.jar"/>
+        <xt:location href="https://github.com/deternitydx/IATH-Oxygen-Plugins/blob/master/jars/CBW.jar?raw=true"/>
         <xt:version>0.0.3</xt:version>
         <xt:oxy_version>14.2+</xt:oxy_version>
         <xt:type>plugin</xt:type>
